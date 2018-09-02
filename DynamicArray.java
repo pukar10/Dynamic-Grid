@@ -268,6 +268,7 @@ public class DynamicArray<T>{
 		// O(N) where N is the number of elements in the list
 
 		// throw IndexOutOfBoundsException for invalid index
+		
 		System.out.println("DynamicArray: remove: index-"+index+"- array display");
 		for(int i = 0; i < capacity; i++)
 		{
@@ -288,6 +289,7 @@ public class DynamicArray<T>{
 
 		//get item at index
 		T item = storage[index];
+
 		if(index == capacity)
 		{
 			size--;
@@ -303,10 +305,17 @@ public class DynamicArray<T>{
 
 		//return item
 		size--;
-		if(size == capacity * (1/3))
+		if(size <= capacity * (1.0/3.0))
 		{
 			halfCapacity();
 		}
+
+		System.out.println("new storage: ");
+		for(int i = 0; i < capacity; i++)
+		{
+			System.out.println(storage[i]);
+		}
+
 		return item;
 	}
 
@@ -497,11 +506,11 @@ public class DynamicArray<T>{
 		{
 			System.out.println("yay 4.3");
 		}
-		
+
 		if(ida.capacity() == 4)
 		{
 			System.out.println("yay 4.4!");
-		}
+		} 
 		
 		// remember to tests more things...
 	}
