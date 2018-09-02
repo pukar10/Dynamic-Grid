@@ -24,7 +24,7 @@ public class DynamicArray<T>{
 		// initial capacity of the array should be INITCAP
 		
 		//creates generic array, initial capacity 2
-		T[] storage = (T[]) new Object[INITCAP];
+		storage = (T[]) new Object[INITCAP];
 
 		//set capacity and size
 		this.capacity = INITCAP;
@@ -49,7 +49,7 @@ public class DynamicArray<T>{
 		}
 
 		// set the initial capacity of the array as initCapacity
-		T[] storage = (T[]) new Object[initCapacity];
+		storage = (T[]) new Object[initCapacity];
 
 		//set capacity and size
 		this.capacity = initCapacity;
@@ -166,6 +166,7 @@ public class DynamicArray<T>{
 		System.out.println("value: " + value);
 		System.out.println("size: " + size);
 		System.out.println("capacity: " + capacity);
+		System.out.println(storage[0]);
 
 		//double size of array
 		if(this.size >= this.capacity)
@@ -214,7 +215,7 @@ public class DynamicArray<T>{
 		}
 
 		// double the capacity if no space is available or if last element is not null (need for shifting)
-		if(this.size >= this.capacity || storage[capacity] != null)
+		if(this.size >= this.capacity || storage[capacity-1] != null)
 		{
 			doubleCapacity();
 		}
@@ -223,14 +224,26 @@ public class DynamicArray<T>{
 		if(storage[index] != null)
 		{
 			//shift all items over 1
+			System.out.println("2add() index is not null shift items up index: " + index);
+
 			shiftItemsUp(index);
+
+			System.out.println("index should be same as 2add() statement: " + index);
+			System.out.println("value: " + value);
+
+			storage[index] = value;
+			size++;
+
+		}else{
 			storage[index] = value;
 			size++;
 		}
 
-		//if space is null
-		storage[index] = value;
-		size++;
+		System.out.println("Array after add()");
+		for(int i = 0; i < capacity; i++)
+		{
+			System.out.println(storage[i]);
+		}
 	}
 	
 	
@@ -255,6 +268,12 @@ public class DynamicArray<T>{
 		// O(N) where N is the number of elements in the list
 
 		// throw IndexOutOfBoundsException for invalid index
+		System.out.println("DynamicArray: remove: index-"+index+"- array display");
+		for(int i = 0; i < capacity; i++)
+		{
+			System.out.println(storage[i]);
+		}
+
 		if(index < 0 || index > capacity)
 		{
 			throw new IndexOutOfBoundsException(); 
@@ -325,8 +344,12 @@ public class DynamicArray<T>{
 			System.out.println(storage[i]);
 		}
 		
-		for(int i = index; i < capacity; i++)
+		System.out.println("capacity: " + capacity);
+		System.out.println("start: index: " + index);
+		
+		for(int i = index; i < capacity - 1; i++)
 		{
+			System.out.println("iteration: " + i);
 			storage[i] = storage[i+1];
 		}
 
@@ -353,7 +376,11 @@ public class DynamicArray<T>{
 			System.out.println(storage[i]);
 		}
 
-		for(int i = capacity; i >= index; i--)
+		System.out.println("forloopstart: " + capacity);
+		System.out.println("forloopEnd: " + index);
+		System.out.println("capacity: " + capacity);
+
+		for(int i = capacity - 1; i >= index; i--)
 		{
 			storage[i] = storage[i - 1];
 		}
@@ -365,37 +392,6 @@ public class DynamicArray<T>{
 			System.out.println(storage[i]);
 		}
 	}
-
-
-/*
-	private void shiftItems(int index)
-	{
-		//create temp array
-		T[] temp = (T[]) new Object[capacity];
-
-		//add all items before index
-		for(int i = 0; i < index; i++)
-		{
-			temp[i] = storage[i];
-		}
-
-		//skip index. Add everything after
-		for(int i = index + 1; i <= capacity; i++)
-		{
-			temp[i] = storage[i];
-		}
-
-		//make storage = temp
-		storage = temp;
-
-		//check if it  worked
-		System.out.println("DynamicArray:Add:shiftItems:index: "+index +" should be null");
-		for(int i = 0; i <= capacity; i++)
-		{
-			system.out.println(storage[i]);
-		}
-	}
-*/
 
 	/**
 	 * double capacity of the dynamic array
@@ -409,6 +405,10 @@ public class DynamicArray<T>{
 		T[] temp = (T[]) new Object[newCapacity];
 
 		//put data into new array
+		//problem here
+		System.out.println("Double capacity: size: " + size);
+		System.out.println("Double capacity: capacity: " + capacity);
+		
 		for(int i = 0; i < size; i++)
 		{
 			temp[i] = storage[i];
@@ -416,6 +416,9 @@ public class DynamicArray<T>{
 
 		//make storage equal to new array
 		storage = temp;
+
+		//update capacity
+		this.capacity = newCapacity;
 	}  
 	
 	
@@ -450,9 +453,10 @@ public class DynamicArray<T>{
 		for (int i = 0; i < 3; i++)
 		{
 			ok = ok && ida.add(i*5);
+			System.out.println("Array should be 0 5 10");
 		}
 
-		if (ok && ida.size()==3){
+		if (ok && ida.size() == 3){
 			System.out.println("Yay 2");
 		}
 
@@ -467,17 +471,36 @@ public class DynamicArray<T>{
 		
 		ida.add(1,-10);
 		ida.add(4,100);
+		System.out.println("Array should be: 0 -10 5 10 100");
+
 		if (ida.set(1,-20)==-10 && ida.get(2) == 5 && ida.size() == 5 
 			&& ida.capacity() == 8 ){
 			System.out.println("Yay 3");
 		}
 
-
+//EVERYTHING ABOVE WORKS!
 		
 		// removing from the list?
-		if (ida.remove(0) == 0 && ida.remove(0) == -20 && ida.remove(2) == 100 
-			&& ida.size() == 2 && ida.capacity() == 4 ){
+		if (ida.remove(0) == 0){
 			System.out.println("Yay 4");
+		}
+
+		if(ida.remove(0) == -20)
+		{
+			System.out.println("yay 4.1");
+		}
+		if(ida.remove(2) == 100)
+		{
+			System.out.println("yay 4.2");
+		}
+		if(ida.size() == 2)
+		{
+			System.out.println("yay 4.3");
+		}
+		
+		if(ida.capacity() == 4)
+		{
+			System.out.println("yay 4.4!");
 		}
 		
 		// remember to tests more things...
