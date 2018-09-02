@@ -9,8 +9,8 @@ public class DynamicArray<T>{
 	private static final int INITCAP = 2;	// default initial capacity / minimum capacity
 	private T[] storage;	// underlying array
 
-	private int capacity;
-	private int size;
+	private int capacity; //length of array
+	private int size;	  //items in array
 	
 	// ADD MORE PRIVATE MEMBERS HERE IF NEEDED!
 
@@ -36,6 +36,7 @@ public class DynamicArray<T>{
 	creates generic array that holds initCapacity
 	throws error if initCapacity < 1
 	@parameter initCapacity size for dynamic aray
+	@throw IllegalArgumentException if initCapacity lower than 1
 	*/
 	@SuppressWarnings("unchecked")
 	public DynamicArray(int initCapacity){
@@ -59,6 +60,7 @@ public class DynamicArray<T>{
 	size keeps track of the dynamicArray size.
 	size is number of elements inside the dynamic array
 	returns size of dynamicArray
+	@return size, elements in dyanimc array
 	*/
 	public int size() {	  
 		//report the number of elements in the list
@@ -71,6 +73,7 @@ public class DynamicArray<T>{
 	capacity keeps track of dynanimcArray length.
 	capacity is amount of slots in dyamicArray.
 	returns capacity of dynamicArray
+	@return capacity, length of dynamic array
 	*/
 	public int capacity() { 
 		//report the max number of elements before the next expansion
@@ -86,6 +89,7 @@ public class DynamicArray<T>{
 	@parameter index of the item you want to change
 	@parameter value you want to update the item with
 	@return old item at given index
+	@throw IndexOutOfBoundsException if index is lower than 0 or greater than capacity
 	*/
 	public T set(int index, T value){
 		// change item x at index i to be value	
@@ -111,7 +115,7 @@ public class DynamicArray<T>{
 		T item = storage[index];
 
 		//update value
-		storage[index] = value;
+		storage[index] = (T) value;
 
 		//return old item
 		return item;
@@ -121,6 +125,7 @@ public class DynamicArray<T>{
 	get item from the given index
 	@parameter index of the item you want to get back
 	@return item at the given index
+	@throw IndexOutOfBoundsException if index lower than 0 or greater than capacity
 	*/
 	public T get(int index){
 		// return the item at index
@@ -158,14 +163,20 @@ public class DynamicArray<T>{
 			return false;
 		}
 
+		System.out.println("value: " + value);
+		System.out.println("size: " + size);
+		System.out.println("capacity: " + capacity);
+
 		//double size of array
 		if(this.size >= this.capacity)
 		{
 			//makes storage twice the size keeps all items
 			doubleCapacity();
+			System.out.println("new capacity: " + capacity);
 		}
 
 		//add item at end of list.
+		//this is broken but why?
 		storage[size] = value;
 
 		//increment size
@@ -187,6 +198,7 @@ public class DynamicArray<T>{
 
 	@parameter index slot you want to add item into
 	@parameter value item value you want to add into index
+	@throw IndexOutOfBoundsException if index lower than 0 or greater than capacity
 	*/
 	@SuppressWarnings("unchecked")
 	public void add(int index, T value){  
@@ -230,6 +242,7 @@ public class DynamicArray<T>{
 
 	@parameter index of item you want to remove
 	@return item you removed
+	@throw IndexOutofBoudnsException if index lower than 0 or greater than capacity
 	*/
 	@SuppressWarnings("unchecked")
 	public T remove(int index){
@@ -278,6 +291,9 @@ public class DynamicArray<T>{
 		return item;
 	}
 
+	/*
+	halves the capacity of the dynamic array then moves all items into smaller array
+	 */
 	private void halfCapacity()
 	{
 		//half capacity
@@ -296,6 +312,10 @@ public class DynamicArray<T>{
 		storage = temp;
 	}
 
+	/*
+	shifts all items down one spot
+	@param index of the spot you want to start moving down from
+	 */
 	private void shiftItemsDown(int index)
 	{
 		//print original
@@ -320,6 +340,10 @@ public class DynamicArray<T>{
 	
 	}
 
+	/**
+	 * shift items up in the dynamic array
+	 * @param index index you want to start shifting items up
+	 */
 	private void shiftItemsUp(int index)
 	{
 		//print original
@@ -373,6 +397,9 @@ public class DynamicArray<T>{
 	}
 */
 
+	/**
+	 * double capacity of the dynamic array
+	 */
 	private void doubleCapacity()
 	{
 		//get new capacity
@@ -409,6 +436,7 @@ public class DynamicArray<T>{
 	public static void main (String args[]){
 		// new list?
 		DynamicArray<Integer> ida = new DynamicArray<>();
+
 		if ((ida.size() == 0) && (ida.capacity() == 2)){
 			System.out.println("Yay 1");
 		}
@@ -418,11 +446,23 @@ public class DynamicArray<T>{
 
 		// adding to the list?
 		boolean ok = true;
-		for (int i=0; i<3;i++)
+
+		for (int i = 0; i < 3; i++)
+		{
 			ok = ok && ida.add(i*5);
-		
-		if (ok && ida.size()==3 && ida.get(2) == 10 && ida.capacity() == 4 ){
+		}
+
+		if (ok && ida.size()==3){
 			System.out.println("Yay 2");
+		}
+
+		if(ida.get(2) == 10)
+		{
+			System.out.println("yay2.1");
+		}
+		if(ida.capacity() == 4)
+		{
+			System.out.println("yay2.2!");
 		}
 		
 		ida.add(1,-10);
@@ -431,7 +471,6 @@ public class DynamicArray<T>{
 			&& ida.capacity() == 8 ){
 			System.out.println("Yay 3");
 		}
-
 
 
 		
