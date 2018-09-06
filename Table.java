@@ -15,6 +15,7 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 		// constructor
 		// create an table of empty rowHead and colHead, board of 0 rows and 0 cols
 		// set the operator
+		
 	}
 	
 	public int getSizeRow(){

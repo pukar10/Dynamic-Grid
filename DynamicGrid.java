@@ -12,13 +12,13 @@ public class DynamicGrid<T>{
 	public DynamicGrid(){
 		// constructor
 		// create an empty table of 0 rows and 0 cols
-		
+		storage = new DynamicArray<DynamicArray<T>>();
 	}
 
 	public int getNumRow() {
 		// return number of rows in the grid
 		// O(1) 
-		return this.rows;
+		return storage.size();
 	}
 	
 	public int getNumCol() { 
@@ -58,6 +58,7 @@ public class DynamicGrid<T>{
 		// Hint: Remember the big-O of the underlying DynamicArray of DynamicArrays
 		
 		// Note: this can be used to append rows as well as insert rows
+		return false;
 	}
 	
 	public boolean addCol(int index, DynamicArray<T> newCol){
@@ -71,6 +72,7 @@ public class DynamicGrid<T>{
 		// Hint: Remember the big-O of the underlying DynamicArray of DynamicArrays
 		
 		// Note: this can be used to append columns as well as insert columns
+		return false;
 	}
 	
 	public DynamicArray<T> removeRow(int index){
@@ -80,7 +82,7 @@ public class DynamicGrid<T>{
 		// Hint: Use the underlying storage to do 90% of this...
 		//
 		// O(R) where R is the number of rows of the grid
-		
+		return null;
 	}
 
 	public DynamicArray<T> removeCol(int index){
@@ -90,6 +92,7 @@ public class DynamicGrid<T>{
 		// Hint: Use the underlying storage to do 90% of this...
 		//
 		// O(RC) where R is the number of rows and C is the number of columns
+		return null;
 	}
 
 
