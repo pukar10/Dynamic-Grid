@@ -118,7 +118,6 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 	
 	// --------------------------------------------------------
 	// PROVIDED for you to help with testing
-	// DO NOT CHANGE CODE!
 	// More testing code you can change further down...
 	// --------------------------------------------------------
 
@@ -131,7 +130,7 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 
 	private int getColMaxWidth(int colIndex){
 		int ans = -1;
-		for (int i=0;i<this.sizeRow;i++){
+		for (int i=0;i<this.getSizeRow();i++){
 			int width = (this.getCell(i,colIndex)).toString().length();
 			if (ans<width)
 				ans = width;
@@ -146,13 +145,14 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 
 	private int getRowHeadMaxWidth(){
 		int ans = -1;
-		for (int i=0;i<this.sizeRow;i++){
+		for (int i=0;i<this.getSizeRow();i++){
 			int width = (rowHead.get(i)).toString().length();
 			if (ans<width)
 				ans = width;
 		}
 		return ans+1;	
 	}
+
 
 	
 	/**
@@ -163,12 +163,12 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 	@Override
 	public String toString(){
 		
-		if(sizeRow == 0 && sizeCol==0 ){ return "Empty Table"; }
+		if(getSizeRow() == 0 && getSizeCol()==0 ){ return "Empty Table"; }
 
 		// basic info of op and size
     	StringBuilder sb = new StringBuilder("============================\nTable\n");
     	sb.append("Operation: "+op.getClass()+"\n");
-    	sb.append("Size: "+ sizeRow + " rows, "+sizeCol+ " cols\n");
+    	sb.append("Size: "+ getSizeRow() + " rows, " + getSizeCol()+ " cols\n");
 
 		// decide how many chars to use for rowHead 
     	int rowHeadWidth = getRowHeadMaxWidth(); 
@@ -177,7 +177,7 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
     	sb.append(String.format(String.format("%%%ds",rowHeadWidth)," "));
 
 		// colHead 
-    	for (int i=0; i<sizeCol; i++){		
+    	for (int i=0; i<getSizeCol(); i++){		
     		int colWidth = getColMaxWidth(i);
     		colWidths.add(colWidth);
     		totalWidth += colWidth+1;
@@ -187,9 +187,9 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
     	sb.append("\n"+String.format(String.format("%%%ds", totalWidth), " ").replace(" ","-")+"\n");
 
 		// row by row
-    	for(int i=0; i<sizeRow; i++){		
+    	for(int i=0; i<getSizeRow(); i++){		
     		sb.append(String.format(String.format("%%%ds",rowHeadWidth),rowHead.get(i)));
-    		for (int j=0;j<sizeCol; j++){
+    		for (int j=0;j<getSizeCol(); j++){
 	    		int colWidth = colWidths.get(j);
       			sb.append(String.format(String.format("|%%%ds",colWidth),board.get(i,j)));
       		}

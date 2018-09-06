@@ -6,27 +6,32 @@ public class DynamicGrid<T>{
 	// how the columns/rows should be stored in storage.
 	
 	// ADD MORE PRIVATE MEMBERS HERE IF NEEDED!
-
+	private int rows;
+	private int cols;
 	
 	public DynamicGrid(){
 		// constructor
 		// create an empty table of 0 rows and 0 cols
+		
 	}
 
 	public int getNumRow() {
 		// return number of rows in the grid
 		// O(1) 
+		return this.rows;
 	}
 	
 	public int getNumCol() { 
 		// return number of columns in the grid
 		// O(1) 
+		return this.cols;
 	}
 	
 	public T get(int indexRow, int indexCol){
 		// return the value at the specified row and column
 		// throw IndexOutOfBoundsException for invalid index
 		// O(1)
+		return null;
 	}
 	
 	public T set(int indexRow, int indexCol, T value){
@@ -37,6 +42,7 @@ public class DynamicGrid<T>{
 
 		// Note: this can not be used to add new items, only replace
 		// existing items.
+		return null;
 	}
 	
 	public boolean addRow(int index, DynamicArray<T> newRow){
@@ -103,11 +109,14 @@ public class DynamicGrid<T>{
 		// make some simple grids
 		DynamicGrid<String> sgrid = new DynamicGrid<>();
 		DynamicArray<String> srow = new DynamicArray<>();
+
 		srow.add("English");
 		srow.add("Spanish");
 		srow.add("German");
+
 		if (sgrid.getNumRow() == 0 && sgrid.getNumCol() == 0 && sgrid.addRow(0,srow)
-			&& sgrid.getNumRow() == 1 && sgrid.getNumCol() == 3){
+			&& sgrid.getNumRow() == 1 && sgrid.getNumCol() == 3)
+		{
 			System.out.println("Yay 1");
 		}
 		
