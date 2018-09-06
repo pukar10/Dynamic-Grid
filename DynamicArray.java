@@ -1,7 +1,6 @@
 // TO DO: add your implementation and JavaDocs
 /*
-	GOT YAY 1 
-	WORK ON YAY 2
+	WORKING
 */
 
 public class DynamicArray<T>{
@@ -163,10 +162,12 @@ public class DynamicArray<T>{
 			return false;
 		}
 
+/*DEBUG
 		System.out.println("value: " + value);
 		System.out.println("size: " + size);
 		System.out.println("capacity: " + capacity);
 		System.out.println(storage[0]);
+*/
 
 		//double size of array
 		if(this.size >= this.capacity)
@@ -183,10 +184,10 @@ public class DynamicArray<T>{
 		//increment size
 		size++;
 
-		//return true if item is in spot
+		//DEBUG
 		if(storage[size-1] == null)
 		{
-			System.out.println("DynamicArray:add:What?");
+			//System.out.println("DynamicArray:add:What?");
 		}
 		return true;
 
@@ -224,12 +225,14 @@ public class DynamicArray<T>{
 		if(storage[index] != null)
 		{
 			//shift all items over 1
-			System.out.println("2add() index is not null shift items up index: " + index);
+			//System.out.println("2add() index is not null shift items up index: " + index);
 
 			shiftItemsUp(index);
 
+/*DEBUG
 			System.out.println("index should be same as 2add() statement: " + index);
 			System.out.println("value: " + value);
+*/
 
 			storage[index] = value;
 			size++;
@@ -238,12 +241,13 @@ public class DynamicArray<T>{
 			storage[index] = value;
 			size++;
 		}
-
+/*DEBUG
 		System.out.println("Array after add()");
 		for(int i = 0; i < capacity; i++)
 		{
 			System.out.println(storage[i]);
 		}
+*/
 	}
 	
 	
@@ -269,12 +273,13 @@ public class DynamicArray<T>{
 
 		// throw IndexOutOfBoundsException for invalid index
 		
+/*DEBUG		
 		System.out.println("DynamicArray: remove: index-"+index+"- array display");
 		for(int i = 0; i < capacity; i++)
 		{
 			System.out.println(storage[i]);
 		}
-
+*/
 		if(index < 0 || index > capacity)
 		{
 			throw new IndexOutOfBoundsException(); 
@@ -310,11 +315,13 @@ public class DynamicArray<T>{
 			halfCapacity();
 		}
 
+/*DEBUG
 		System.out.println("new storage: ");
 		for(int i = 0; i < capacity; i++)
 		{
 			System.out.println(storage[i]);
 		}
+*/
 
 		return item;
 	}
@@ -346,29 +353,30 @@ public class DynamicArray<T>{
 	 */
 	private void shiftItemsDown(int index)
 	{
-		//print original
+/*		//print original
 		System.out.println("shiftItemsDown: orignial array:");
 		for(int i = 0; i < capacity; i++)
 		{
 			System.out.println(storage[i]);
 		}
-		
+*/
+
 		System.out.println("capacity: " + capacity);
 		System.out.println("start: index: " + index);
 		
 		for(int i = index; i < capacity - 1; i++)
 		{
-			System.out.println("iteration: " + i);
+			//System.out.println("iteration: " + i);
 			storage[i] = storage[i+1];
 		}
 
-		//print new Array
+/*		//print new Array
 		System.out.println("shiftItemsDown: new array: from " + index + " should be changed");
 		for(int i = 0; i < capacity; i++)
 		{
 			System.out.println(storage[i]);
 		}
-
+*/
 	
 	}
 
@@ -378,6 +386,7 @@ public class DynamicArray<T>{
 	 */
 	private void shiftItemsUp(int index)
 	{
+		/*
 		//print original
 		System.out.println("shiftItemsup: orignial array:");
 		for(int i = 0; i < capacity; i++)
@@ -385,21 +394,25 @@ public class DynamicArray<T>{
 			System.out.println(storage[i]);
 		}
 
+
 		System.out.println("forloopstart: " + capacity);
 		System.out.println("forloopEnd: " + index);
 		System.out.println("capacity: " + capacity);
+*/
 
 		for(int i = capacity - 1; i >= index; i--)
 		{
 			storage[i] = storage[i - 1];
 		}
 
+/*
 		//print shifted array
 		System.out.println("shiftItemsup:shifted Array:");
 		for(int i = 0; i < capacity; i++)
 		{
 			System.out.println(storage[i]);
 		}
+*/
 	}
 
 	/**
@@ -426,8 +439,14 @@ public class DynamicArray<T>{
 		//make storage equal to new array
 		storage = temp;
 
+		System.out.println("Double capacity: size is: " + size);
+		System.out.println("Double capacity: capacity: " + capacity);
+
 		//update capacity
 		this.capacity = newCapacity;
+
+		System.out.println("new capacity: size: " + size);
+		System.out.println("new capacity: capacity: " + capacity);
 	}  
 	
 	
