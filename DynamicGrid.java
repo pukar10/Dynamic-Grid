@@ -7,7 +7,9 @@ public class DynamicGrid<T>{
 	
 	// ADD MORE PRIVATE MEMBERS HERE IF NEEDED!
 	private int rows;
+	private int rowLength;
 	private int cols;
+	private int colLength;
 	
 	public DynamicGrid(){
 		// constructor
@@ -15,12 +17,14 @@ public class DynamicGrid<T>{
 		storage = new DynamicArray<DynamicArray<T>>();
 	}
 
+	//rows are # of dynamicArrays in storage
 	public int getNumRow() {
 		// return number of rows in the grid
 		// O(1) 
-		return storage.size();
+		return this.rows;
 	}
 	
+	//cols are # of items in 
 	public int getNumCol() { 
 		// return number of columns in the grid
 		// O(1) 
@@ -31,7 +35,12 @@ public class DynamicGrid<T>{
 		// return the value at the specified row and column
 		// throw IndexOutOfBoundsException for invalid index
 		// O(1)
-		return null;
+		if(indexRow < 0 || indexRow > this.rows || indexCol < 0 || indexCol > this.cols)
+		{
+			throw new IndexOutOfBoundsException();
+		}
+
+		return storage.get(indexRow).get(indexCol);
 	}
 	
 	public T set(int indexRow, int indexCol, T value){
@@ -42,7 +51,16 @@ public class DynamicGrid<T>{
 
 		// Note: this can not be used to add new items, only replace
 		// existing items.
-		return null;
+		if(indexRow < 0 || indexRow > this.rows || indexCol < 0 || indexCol > this.cols)
+		{
+			throw new IndexOutOfBoundsException();
+		}
+
+		//get item then change it
+		T item = this.get(indexRow, indexCol);
+		storage.get(indexRow).set(indexCol, value);
+
+		return item;
 	}
 	
 	public boolean addRow(int index, DynamicArray<T> newRow){
@@ -58,6 +76,27 @@ public class DynamicGrid<T>{
 		// Hint: Remember the big-O of the underlying DynamicArray of DynamicArrays
 		
 		// Note: this can be used to append rows as well as insert rows
+		
+		if(index < 0 || index > storage.capacity())
+		{
+			throw new IndexOutOfBoundsException();
+		}
+
+		if(this.rows == 0)
+		{
+			this.rowLength = newRow.capacity()
+		}
+
+		if(storage.get(index) == null)
+		{
+			storage.add(index, newRow);
+			this.rows++;
+			return true;
+		}else{
+			storage.set(index, newRow);
+			return true;
+		}
+
 		return false;
 	}
 	
@@ -72,7 +111,24 @@ public class DynamicGrid<T>{
 		// Hint: Remember the big-O of the underlying DynamicArray of DynamicArrays
 		
 		// Note: this can be used to append columns as well as insert columns
-		return false;
+		
+		if(index < 0 || index > storage.capacity)
+		{
+			throw new IndexOutOfBoundsException();
+		}
+
+		if(this.cols == 0)
+		{
+			this.colLength = newCol.capacity();
+		}
+
+		if(newCol.capacity != colLength)
+		{
+			return false;
+		}
+
+		
+		return false`;
 	}
 	
 	public DynamicArray<T> removeRow(int index){
@@ -110,6 +166,7 @@ public class DynamicGrid<T>{
 	
 	public static void main(String[] args){
 		// make some simple grids
+		
 		DynamicGrid<String> sgrid = new DynamicGrid<>();
 		DynamicArray<String> srow = new DynamicArray<>();
 
@@ -127,6 +184,9 @@ public class DynamicGrid<T>{
 			&& sgrid.get(0,1).equals("Espano")) {
 			System.out.println("Yay 2");
 		}
+
+
+
 
 		// more complicated grids
 		DynamicGrid<Integer> igrid = new DynamicGrid<Integer>();
