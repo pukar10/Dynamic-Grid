@@ -1,152 +1,130 @@
-// TO DO: add your implementation and JavaDocs
-/*
-	WORKING
-*/
-
-public class DynamicArray<T>{
+/**
+ * Pukar Subedi
+ * CS330
+ * generic DynamicArray
+ */
+public class DynamicArray<T>
+{
 	
 	private static final int INITCAP = 2;	// default initial capacity / minimum capacity
-	private T[] storage;	// underlying array
+	private T[] storage;					// underlying array
 
-	private int capacity; //length of array
-	private int size;	  //items in array
-	
-	// ADD MORE PRIVATE MEMBERS HERE IF NEEDED!
+	private int capacity; 					//capacity = length of array
+	private int size;	  					//size = items in array
 
-	/*
-	constructor
-	creates generic array that holds INITCAP (which is initially set to 2)
-	*/	
+	/**
+	 * Constructor
+	 * initial capacity of array is INITCAP
+	 * generic array
+	 */
 	@SuppressWarnings("unchecked")
-	public DynamicArray(){
-		// constructor
-		// initial capacity of the array should be INITCAP
-		
-		//creates generic array, initial capacity 2
+	public DynamicArray()
+	{
 		storage = (T[]) new Object[INITCAP];
 
-		//set capacity and size
 		this.capacity = INITCAP;
 		this.size = 0;
 	}
 
-	/*
-	constructor 
-	creates generic array that holds initCapacity
-	throws error if initCapacity < 1
-	@parameter initCapacity size for dynamic aray
-	@throw IllegalArgumentException if initCapacity lower than 1
-	*/
+	/**
+	 * constructor
+	 * builds generic storage array
+	 * 
+	 * @throw IllegalArgumentException when initCapacity is lower than 1
+	 * @param  initCapacity capacity of storage
+	 * @return              
+	 */
 	@SuppressWarnings("unchecked")
-	public DynamicArray(int initCapacity){
-		// constructor
-
-		// throw IllegalArgumentException if initCapacity < 1
+	public DynamicArray(int initCapacity)
+	{
 		if(initCapacity < 1)
 		{
 			throw new IllegalArgumentException();
 		}
 
-		// set the initial capacity of the array as initCapacity
 		storage = (T[]) new Object[initCapacity];
 
-		//set capacity and size
 		this.capacity = initCapacity;
 		this.size = 0;
 	}
 
-	/*
-	size keeps track of the dynamicArray size.
-	size is number of elements inside the dynamic array
-	returns size of dynamicArray
-	@return size, elements in dyanimc array
-	*/
-	public int size() {	  
-		//report the number of elements in the list
-		// O(1)
-
+	
+	/**
+	 * size of storage, number of elements in storage
+	 * O(1)
+	 * 
+	 * @return int size of storage
+	 */
+	public int size() 
+	{	  
 		return this.size;
 	}
 	
-	/*
-	capacity keeps track of dynanimcArray length.
-	capacity is amount of slots in dyamicArray.
-	returns capacity of dynamicArray
-	@return capacity, length of dynamic array
-	*/
-	public int capacity() { 
-		//report the max number of elements before the next expansion
-		// O(1)
-
+	/**
+	 * capacity of storage, length of storage array
+	 * O(1)
+	 * 	
+	 * @return int capacity length of storage array
+	 */
+	public int capacity() 
+	{ 
 		return this.capacity;
 	}
 		
-	/*
-	updates item at given index with given value
-	does not add new items
 
-	@parameter index of the item you want to change
-	@parameter value you want to update the item with
-	@return old item at given index
-	@throw IndexOutOfBoundsException if index is lower than 0 or greater than capacity
-	*/
-	public T set(int index, T value){
-		// change item x at index i to be value	
-		// return old item at index
-		// O(1)
-		
-		// Note: you cannot add new items with this method
-
-		// throw IndexOutOfBoundsException for invalid index
+	/**
+	 * updates item at given index with given value
+	 * does not add new items
+	 * returns old item at index
+	 * O(1)
+	 * 
+	 * @param  index of the item in storage array you want to change
+	 * @param  value value you want to update the item with
+	 * @return T     generic item before you updated it.
+	 * @throw IndexOutOfBoundsException for invalid index
+	 */
+	public T set(int index, T value)
+	{
 		checkIndexBounds(index);
 
-		//don't add new items
 		if(storage[index] == null)
 		{
 			System.out.println("DynamicArray:set:index is null");
 			return null;
 		}
 
-		//save old item
 		T item = storage[index];
-
-		//update value
 		storage[index] = (T) value;
-
-		//return old item
 		return item;
 	}
 
-	/*
-	item from the given index
-	@parameter index of the item you want to get back
-	@return item at the given index
-	@throw IndexOutOfBoundsException if index lower than 0 or greater than capacity
-	*/
-	public T get(int index){
-		// return the item at index
-		// O(1)
-		// throw IndexOutOfBoundsException for invalid index
-
+	/**
+	 * get item from storage. does not delete update or add item
+	 * 
+	 * @param  index of the item you want to get 
+	 * @return T     generic item you want from storage
+	 * @throw IndexOutOfBoundsException for invalid index
+	 */
+	public T get(int index)
+	{
 		checkIndexBounds(index);
 
-		//return item at given index
 		return ( storage[index] );
 	}
 
-	/*
-	adds an item at the end of the list (append)
-	increments size
-	doubleCapacity if needs more space
-	if value is null return false
-	double size of array is qual to or over capacity size
-
-	@parameter value item value you want to add
-	@return true if success false if not success
-	*/
-
+	/**
+	 * adds an item to the end of storage (append)
+	 * increments size
+	 * doubleCapacity if more space is needed
+	 * if value is null return false
+	 * O(1)
+	 * 
+	 * @param  value you want to add to storage
+	 * @return boolean true if success false if cannot add
+	 */
 	@SuppressWarnings("unchecked")
-	public boolean add(T value){
+	public boolean add(T value)
+	{
 		if(value == null)
 		{
 			return false;
@@ -156,14 +134,9 @@ public class DynamicArray<T>{
 		{
 			doubleCapacity();
 		}
-
-		//add item at end of list.
 		storage[size] = value;
-
-		//increment size
 		size++;
 		return true;
-
 	}
 	
 	/*
@@ -178,6 +151,17 @@ public class DynamicArray<T>{
 	@parameter value item value you want to add into index
 	@throw IndexOutOfBoundsException if index lower than 0 or greater than capacity
 	*/
+	/**
+	 * add item into dynamic array at given index
+	 * double capacity if needed
+	 * shifts items up if spot is already taken
+	 * used to insert items, shift up if needed
+	 * O(N)
+	 * 
+	 * @param index you want to add value at
+	 * @param value added to storage
+	 * @throw IndexOutOfBoundsException for invalid index
+	 */
 	@SuppressWarnings("unchecked")
 	public void add(int index, T value){
 		checkIndexBounds(index);
@@ -199,20 +183,17 @@ public class DynamicArray<T>{
 	}
 
 	
-	/*
-	remove and return element at position index
-	remove item from dynamic array at position index.
-	shift elements to cover up gap.
-	halve capacity if number of elements falls below 1/3 of the capacity
-	capacity does not go below INITCAP
-	throw IndexOutOfBoundsException for invalid index
-	O(N)
-	Capacity should not go below INITCAP
-
-	@parameter index of item you want to remove
-	@return item you removed
-	@throw IndexOutofBoudnsException if index lower than 0 or greater than capacity
-	*/
+	/**
+	 * remove value at index and return element that was there
+	 *shift elements to cover gap
+	 *halve capacity if number of elements falls below 1/3 of capacity
+	 *capacity does not go below INITCAP
+	 *O(N)
+	 * 
+	 * @param  index being removed
+	 * @return T     generic item you removed
+	 * @throw IndexOutOfBoundsException for invalid index
+	 */
 	@SuppressWarnings("unchecked")
 	public T remove(int index)
 	{
@@ -235,6 +216,9 @@ public class DynamicArray<T>{
 		return item;
 	}
 
+	/**
+	 * halves the capacity of storage
+	 */
 	private void halfCapacity()
 	{
 		this.capacity /=2;
@@ -246,7 +230,11 @@ public class DynamicArray<T>{
 		storage = temp;
 	}
 
-
+	/**
+	 * shifts array items down at index
+	 * 
+	 * @param index where the shift down starts
+	 */
 	private void shiftItemsDown(int index)
 	{
 		for(int i = index; i < storage.length - 1; i++)
@@ -255,6 +243,11 @@ public class DynamicArray<T>{
 		}
 	}
 
+	/**
+	 * shifts array items up at index
+	 * 
+	 * @param index where the shift up starts
+	 */
 	private void shiftItemsUp(int index)
 	{
 		if(checkSizetoCapacity())
@@ -268,6 +261,9 @@ public class DynamicArray<T>{
 		}
 	}
 
+	/**
+	 * doubles the capacity of storage
+	 */
 	private void doubleCapacity()
 	{
 		capacity *= 2;
@@ -278,12 +274,21 @@ public class DynamicArray<T>{
 		}
 		storage = temp;
 	}
-	
+
+	/**
+	 * checks that storage has not reached capacity
+	 * @return true if reached capacity false if not
+	 */
 	private boolean checkSizetoCapacity()
 	{
 		return (this.size >= this.capacity-1) ? true : false;
 	}
 
+	/**
+	 * checks if given index is legal
+	 * 
+	 * @param index you want to check if legal
+	 */
 	private void checkIndexBounds(int index)
 	{
 		if(index < 0 || index > this.capacity)
@@ -292,6 +297,9 @@ public class DynamicArray<T>{
 		}
 	}
 
+	/**
+	 * prints items in storage
+	 */
 	private void print()
 	{
 		System.out.println("print array: --------	");
