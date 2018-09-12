@@ -2,14 +2,30 @@
 
 public class StringTimer implements Combiner<String, Integer, String>{
 	
-	public String combine(String operand1, Integer operand2){
-		// return a string as a repetition of the original string operand1
-		// the number of repeats is specified by integer operand2
-		// e.g. combine("hat",3) returns "hathathat"
-		// return empty string if operand2 is 0 or negative
-		
-		// O(NL) where N is the value of operand2 and L is the length of operand1
-		// Hint: remember the big-O of copying a string...
+	/**
+	 * return a string as a repetition of the original string operand1
+	 * the number of repeats is specified by integer operand2
+	 * return empty string if perand2 is < 0
+	 * O(NL) where N is value of operand2 and L is length of operand1
+	 * 
+	 * @param  operand1 string you want to copy
+	 * @param  operand2 number of times you want your string to be copied
+	 * @return String   return operand1, operand2 number of times.         
+	 */
+	public String combine(String operand1, Integer operand2)
+	{
+		if(operand2 <= 0)
+		{
+			return "";
+		}else{
+			String result = "";
+			for(int i = 0; i < operand2; i++)
+			{
+				result += operand1;
+			}
+			return result;
+		}
+
 	}
 	
 	// --------------------------------------------------------
