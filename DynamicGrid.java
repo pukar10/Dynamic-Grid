@@ -26,7 +26,7 @@ public class DynamicGrid<T>{
 	public int getNumCol() {
 		// return number of columns in the grid
 		// O(1) 
-		return (storage.size() == 0) ? 0 : storage.get(0).size();
+		return (storage.size() == 0) ? 0 : this.cols;
 	}
 
 	public T get(int indexRow, int indexCol){
@@ -76,28 +76,26 @@ public class DynamicGrid<T>{
 		// Hint: Remember the big-O of the underlying DynamicArray of DynamicArrays
 
 		// Note: this can be used to append rows as well as insert rows
-
-		//GOOD
-		checkRowBound(index);
-		if(checkRowLength(newRow))
+		if(checkRowBound(index))
 		{
-			if(storage.get(index) == null)
+			if(checkRowLength(newRow))
 			{
-				storage.add(index, newRow);
-				this.rows++;
+				DynamicArray<T> tmp = new DynamicArray<>();
+				for(int i = 0; i < newRow.size(); i++)
+				{
+					tmp.add(newRow.get(i));
+				}
+
+				storage.add(index, tmp);
+				updateRowsCols();
 				return true;
 
 			}else{
-				//deep oopy
-				for(int i = 0; i < newRow.capacity(); i++)
-				{
-					storage.get(index).set(i, newRow.get(i));
-				}
-				this.rows++;
-				return true;
-			}
+				return false;
+			}	
+		}else{
+			return false;
 		}
-		return false;
 	}
 
 	public boolean addCol(int index, DynamicArray<T> newCol){
@@ -114,22 +112,12 @@ public class DynamicGrid<T>{
 		checkColBound(index);
 		if(checkColLength(newCol))
 		{
-			if(storage.get(0).get(index) == null)
+			for(int i = 0; i < newCol.size(); i++)
 			{
-				for(int i = 0; i < newCol.size(); i++)
-				{
-					storage.get(i).add(index, newCol.get(i));
-				}
-				this.cols++;
-				return true;
-			}else{
-				//if editing an existing column
-				for(int i = 0; i < newCol.size(); i++)
-				{
-					storage.get(i).set(index, newCol.get(i));
-				}
-				return true;
+				storage.get(i).add(index, newCol.get(i));
 			}
+			updateRowsCols();
+			return true;
 		}else{
 			return false;
 		}
@@ -142,15 +130,9 @@ public class DynamicGrid<T>{
 		// Hint: Use the underlying storage to do 90% of this...
 		//
 		// O(R) where R is the number of rows of the grid
-
 		checkRowBound(index);
-		if(storage.get(index) == null)
-		{
-			return null;
-		}else{
-			this.rows--;
-			return storage.remove(index);
-		}
+		this.rows--;
+		return storage.remove(index);
 	}
 
 	public DynamicArray<T> removeCol(int index){
@@ -162,28 +144,33 @@ public class DynamicGrid<T>{
 		// O(RC) where R is the number of rows and C is the number of columns
 
 		checkColBound(index);
-		if(storage.get(index) == null)
+		DynamicArray<T> tmp = new DynamicArray<>();
+		for(int i = 0; i < this.rows; i++)
 		{
-			return null;
-		}else{
-			DynamicArray<T> holder = new DynamicArray<>();
-			for(int i = 0; i < this.rows; i++)
-			{
-				holder.add(storage.get(i).remove(index));
-			}
-			this.cols--;
-			return holder;
+			tmp.add(storage.get(i).remove(index));
 		}
+		this.cols--;
+		return tmp;
+	}
+
+	private void updateRowsCols()
+	{
+		this.rows = storage.size();
+		this.cols = storage.get(0).size();
 	}
 
 	private boolean checkColLength(DynamicArray<T> newCol)
 	{
 		if(storage.size() == 0)
 		{
-			this.rows = newCol.size();
 			return true;
 		}else{
-			return (newCol.size() == this.cols) ? true : false;
+			if(this.rows == newCol.size())
+			{
+				return true;
+			}else{
+				return false;
+			}
 		}
 	}
 
@@ -191,28 +178,38 @@ public class DynamicGrid<T>{
 	{
 		if(storage.size() == 0)
 		{
-			this.cols = newRow.size();
 			return true;
 		}else{
-			return (newRow.size() == this.cols) ? true : false;
+			if(this.cols == newRow.size())
+			{
+				return true;
+			}else{
+				return false;
+			}
 		}
 	}
 
-
-
-	private void checkRowBound(int index)
+	private boolean checkRowBound(int index)
 	{
-		if(index < 0 || index > this.rows)
-		{
-			throw new IndexOutOfBoundsException();
-		}
+		return (index < 0 || index > this.rows) ? false : true;
 	}
 
-	private void checkColBound(int index)
+	private void 	checkColBound(int index)
 	{
 		if(index < 0 || index > this.cols)
 		{
 			throw new IndexOutOfBoundsException();
+		}
+	}
+
+	private void print()
+	{
+		for(int i = 0; i < storage.capacity(); i++)
+		{
+			for(int x = 0; i < storage.get(i).capacity(); i++)
+			{
+				System.out.println(storage.get(i).get(i));
+			}
 		}
 	}
 
@@ -285,7 +282,9 @@ public class DynamicGrid<T>{
 		if (ok && igrid.getNumRow() == 3 && igrid.getNumCol() == 1 && igrid.get(2,0)==30) {
 			System.out.println("Yay 3");
 		}
-		
+
+//persnal test		
+
 
 //DEBUG THIS
 
@@ -294,25 +293,56 @@ public class DynamicGrid<T>{
 		icol.add(-20);
 		ok = igrid.addCol(1,icol);
 		icol.add(-30);
-		if (!ok && igrid.addCol(1,icol) && igrid.getNumRow() == 3 && igrid.getNumCol() == 2){
+		if (!ok && igrid.addCol(1,icol))
+		{
 			System.out.println("Yay 4");		
 		}
+		if(igrid.getNumRow() == 3)
+		{
+			System.out.println("Yay4.1");
+		}
+
+		//work on getNumCol();
+		if(igrid.getNumCol() == 2)
+		{
+			System.out.println("Yay4.2");
+		}
 		
-/*		
+
 		DynamicArray<Integer> irow = new DynamicArray<>();
-		irow.add(5); irow.add(10);
-		if (!igrid.addRow(5,irow) && igrid.addRow(0,irow) && igrid.getNumRow() == 4 &&
-			igrid.get(0,0) == 5 && igrid.get(3,1) == -30){
+		System.out.println("debug:");
+
+		System.out.println(igrid.getNumRow()); //3 rows
+
+		System.out.println("irow.add(): "+irow.add(5));
+		System.out.println("irow.add(): "+irow.add(10));
+
+		if (!igrid.addRow(5,irow))
+		{
 			System.out.println("Yay 5");		
 		}
-		//System.out.println(igrid.toString());
-		
+		if(igrid.addRow(0,irow))
+		{
+			System.out.println("Yay 5 first");
+		}
+		if(igrid.getNumRow() == 4)
+		{
+			System.out.println("Yay 5.1");
+		}
+		if(igrid.get(0,0) == 5)
+		{
+			System.out.println("Yay 5.2");
+		}
+		if(igrid.get(3,1) == -30)
+		{
+			System.out.println("yay 5.3");
+		}
+		System.out.println(igrid.toString());
 		irow = igrid.removeRow(2);
 		if (igrid.getNumRow() == 3 && igrid.getNumCol() == 2 && irow.get(0) == 20 &&
 			igrid.get(0,1) == 10 && igrid.get(2,0) == 30){
 			System.out.println("Yay 6");		
 		}		
-*/
 	}
 
 }
