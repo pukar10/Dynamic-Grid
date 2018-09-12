@@ -1,4 +1,5 @@
-// TO DO: add your implementation and JavaDoc
+// Pukar Subedi
+// CS310
 
 public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,ColType,CellType>>{
 	
@@ -11,40 +12,48 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 	
 	//ADD MORE PRIVATE MEMBERS HERE IF NEEDED!
 	
-	public Table(OpType op){
+	public Table(OpType op)
+	{
 		// constructor
 		// create an table of empty rowHead and colHead, board of 0 rows and 0 cols
 		// set the operator
-		
+		rowHead = new DynamicArray<>();
+		colHead = new DynamicArray<>();
+		board = new DynamicGrid<>();
+		this.op = op;	
 	}
 	
 	public int getSizeRow(){
 		// report the number of rows in board
 		// O(1)
+		return rowHead.size();
 	}
 	
 	public int getSizeCol(){
 		// report the number of columns in board 
 		// O(1)
-
+		return colHead.size();
 	}
 		
 	public RowType getRowHead(int r) {
 		// return the item at index r from rowHead
 		// throw IndexOutOfBoundsException for invalid index
 		// O(1)
+		return rowHead.get(r);
 	}
 	
 	public ColType getColHead(int c) {
 		// return the item at index c from colHead
 		// throw IndexOutOfBoundsException for invalid index
 		// O(1)
+		return colHead.get(c);
 	}
 	
 	public CellType getCell(int r, int c) {
 		// return the cell at row r, column c from board
 		// throw IndexOutOfBoundsException for invalid index
 		// O(1)
+		return board.get(r,c);
 	}
 	
 	public void setOp(OpType op) {
@@ -52,9 +61,18 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 		// re-calculate and reset the cells of the board
 		//
 		// O(CR) where C is the number of columns and R is the number of rows of the grid
+		this.op = op;
+		for(int i = 0; i < getSizeRow(); i++)
+		{
+			for(int s = 0; s < getSizeCol(); s++)
+			{
+				board.set(i,s,op.combine(rowHead.get(i), colHead.get(s)));
+			}
+		}
 	}
 
 
+	//IFFY CHECK OVER AGAIN!
 	public boolean addRow(int i, RowType v){
 		// insert v to rowHead at index i 
 		// also insert a new row to the grid at row index i
@@ -64,9 +82,17 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 		//
 		// O(C+R) where R is the number of rows of the grid and 
 		//		C is the number of columns of the grid
-
+		rowHead.add(i,v);
+		DynamicArray<CellType> tmp = new DynamicArray<>();
+		for(int s = 0; s < colHead.size(); s++)
+		{
+			tmp.add(op.combine(v, colHead.get(s)));
+		}
+		board.addRow(i, tmp);
+		return true;
 	}
-	
+
+
 	public boolean addCol(int i, ColType v){
 		// insert v to colHead at index i 
 		// also insert a new column to the grid at column index i
@@ -75,7 +101,14 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 		//
 		// O(CR) where R is the number of rows of the grid and 
 		//		C is the number of columns of the grid
-
+		colHead.add(i, v);
+		DynamicArray<CellType> tmp = new DynamicArray<>();
+		for(int s = 0; s < rowHead.size(); s++)
+		{
+			tmp.add(op.combine(rowHead.get(s), v));
+		}
+		board.addCol(i, tmp);
+		return true;
 	}
 	
 	public RowType removeRow(int i){
@@ -85,6 +118,9 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 		//
 		// O(R) where R is the number of rows of the grid
 
+		RowType tmp = rowHead.remove(i);
+		board.removeRow(i);
+		return tmp;
 	}
 
 	public ColType removeCol(int i){
@@ -94,7 +130,9 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 		//
 		// O(CR) where R is the number of rows and 
 		//		 C is the number of columns of the grid 
-
+		ColType tmp = colHead.remove(i);
+		board.removeCol(i);
+		return tmp;
 	}
 	
 	public RowType setRow(int i, RowType v){
@@ -104,7 +142,12 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 		// throw IndexOutOfBoundsException for invalid index
 		//
 		// O(C) where C is the number of columns of the grid
-		 
+		 RowType re = rowHead.set(i, v);
+		 for(int s = 0; s < getSizeCol(); s++)
+		 {
+		 	board.set(i, s, op.combine(v, colHead.get(s)));
+		 }
+		 return re;
 	}
 	
 	public ColType setCol(int i, ColType v){
@@ -114,7 +157,12 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 		// throw IndexOutOfBoundsException for invalid index
 		//
 		// O(R) where R is the number of rows of the grid
-
+		ColType re = colHead.set(i, v);
+		for(int s = 0; s < getSizeRow(); s++)
+		{
+			board.set(s, i, op.combine(rowHead.get(s), v));
+		}
+		return re;
 	}
 	
 	// --------------------------------------------------------
@@ -214,7 +262,7 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 		
 		if (stable.getSizeRow() == 2 && stable.getSizeCol() == 1 &&
 			stable.getCell(0,0).equals("red apple") && stable.getCell(1,0).equals("yellow apple")) {
-			System.out.println("Yay 1");
+			System.out.println("Table Yay 1");
 		}
 		//System.out.println(stable.toString());		
 		
@@ -223,7 +271,7 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 		stable.addRow(2,"green");
 		if (stable.getSizeRow()==3 && stable.getSizeCol()==3 && stable.getRowHead(2).equals("green")
 			&& stable.getColHead(2).equals("banana") && stable.getCell(2, 1).equals("green kiwi")){
-			System.out.println("Yay 2");			
+			System.out.println("Table Yay 2");			
 		}
 		//System.out.println(stable.toString());
 		
@@ -231,7 +279,7 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 		stable.setCol(2,"orange");
 		if (stable.getSizeRow()==2 && stable.getSizeCol()==3 && stable.getRowHead(0).equals("yellow")
 			&& stable.getColHead(2).equals("orange") && stable.getCell(0, 2).equals("yellow orange")){
-			System.out.println("Yay 3");			
+			System.out.println("Table Yay 3");			
 		}		
 		//System.out.println(stable.toString());
 
@@ -242,14 +290,14 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 		}
 		if (itable.getSizeRow()==5 && itable.getSizeCol()==5 && itable.getCell(0, 0)==51
 			&& itable.getCell(4, 0)==55 && itable.getCell(3, 4)==14 ){
-			System.out.println("Yay 4");			
+			System.out.println("Table Yay 4");			
 		}
 		//System.out.println(itable.toString());
 		
 		itable.setOp(new IntegerTimer());
 		if (itable.getSizeRow()==5 && itable.getSizeCol()==5 && itable.getCell(0, 0)==50
 			&& itable.getCell(4, 0)==250 && itable.getCell(3, 4)==40 ){
-			System.out.println("Yay 5");			
+			System.out.println("Table Yay 5");			
 		}
 		//System.out.println(itable.toString());
 					
