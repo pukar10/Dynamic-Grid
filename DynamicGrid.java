@@ -1,38 +1,50 @@
-// TO DO: add your implementation and JavaDoc
+// Pukar Subedi
 
 public class DynamicGrid<T>{
 	private DynamicArray<DynamicArray<T>> storage;	// underlying storage
-	// HINT: Read the big-O requirements of the methods below to determine
-	// how the columns/rows should be stored in storage.
 
-	// ADD MORE PRIVATE MEMBERS HERE IF NEEDED!
 	private int rows;
 	private int cols;
 
+	/**
+	 * constructor
+	 * create an empty table of 0 rows and 0 cols
+	 * @return nothing
+	 */
 	public DynamicGrid(){
-		// constructor
-		// create an empty table of 0 rows and 0 cols
 		storage = new DynamicArray<DynamicArray<T>>();
 	}
 
-	//number of items not capacity
+	/**
+	 * return number of rows in grid
+	 * O(1)
+	 * 
+	 * @return number of rows
+	 */
 	public int getNumRow() {
-		// return number of rows in the grid
-		// O(1) 
 		return storage.size();
 	}
 
-	//number of items not capacity
+	/**
+	 * return number of columns in the grid
+	 * O(1)
+	 * 
+	 * @return number of columns
+	 */
 	public int getNumCol() {
-		// return number of columns in the grid
-		// O(1) 
 		return (storage.size() == 0) ? 0 : this.cols;
 	}
 
+	/**
+	 * return the value at the specified row and column
+	 * ther class throws IndexOutOfBoundsException for invalid index
+	 * O(1)
+	 * 
+	 * @param  indexRow index of row
+	 * @param  indexCol index of col
+	 * @return          value at given row and col
+	 */
 	public T get(int indexRow, int indexCol){
-		// return the value at the specified row and column
-		// throw IndexOutOfBoundsException for invalid index
-		// O(1)
 		if(storage.size() == 0)
 		{
 			return null;
@@ -44,38 +56,42 @@ public class DynamicGrid<T>{
 		}
 	}
 
+	/**
+	 * conly used to replace existing items NOT ADD NEW ONES
+	 * change value at the specified row and column to be value
+	 * return the old value
+	 * other class takes care of IndexOutOfBoundsException for invalid index
+	 * O(1)
+	 * 
+	 * @param  indexRow row Index
+	 * @param  indexCol col index
+	 * @param  value    new value
+	 * @return          old value
+	 */
 	public T set(int indexRow, int indexCol, T value){
-		// Note: this can not be used to add new items, only replace
-
-		// change value at the specified row and column to be value
-		// return the old value
-		// throw IndexOutOfBoundsException for invalid index
-		// O(1)
-
-		// existing items.
 		checkRowBound(indexRow);
 		checkColBound(indexCol);
 
-		//get item then change it
 		T item = storage.get(indexRow).get(indexCol);
 		storage.get(indexRow).set(indexCol, value);
 
 		return item;
 	}
 
+	/**
+	 * copy values from newRow to add a row at the row index specified
+	 * cannot add if the length of newRow does not match existing rows.
+	 * make a deep copy
+	 * return true if newRow can be added
+	 * return false otherwise
+	 * used to append rows as well as insert rows!
+	 * O(C+R) where R is the number of rows and C isthe number of Columns of the grid
+	 * 
+	 * @param  index  index of row position to add at
+	 * @param  newRow new row you want to add
+	 * @return        true of success false otherwise
+	 */
 	public boolean addRow(int index, DynamicArray<T> newRow){
-		// copy values from newRow to add a row at the row index specified
-		// cannot add if the length of newRow does not match existing rows
-		// 
-		// Note: make a deep copy of the incoming row for insertion
-		//
-		// return true if newRow can be added correctly
-		// return false otherwise
-		// 
-		// O(C+R) where R is the number of rows and C is the number of columns of the grid
-		// Hint: Remember the big-O of the underlying DynamicArray of DynamicArrays
-
-		// Note: this can be used to append rows as well as insert rows
 		if(checkRowBound(index))
 		{
 			if(checkRowLength(newRow))
@@ -98,17 +114,19 @@ public class DynamicGrid<T>{
 		}
 	}
 
+	/**
+	 * copy values from newCol to add a column at the column index specified 
+	 * cannot add if the length of newCol does not match existing columns
+	 * return true if newCol can be added correctly
+	 * return false otherwise
+	 * used to append columns as well as insert columns
+	 * O(RC) where R is the number of rows and C is the number of columns of the grid
+	 * 
+	 * @param  index  position you want to add colmn
+	 * @param  newCol new values you want added
+	 * @return        old values - replaced values
+	 */
 	public boolean addCol(int index, DynamicArray<T> newCol){
-		// copy values from newCol to add a column at the column index specified
-		// cannot add if the length of newCol does not match existing columns
-		//
-		// return true if newCol can be added correctly
-		// return false otherwise
-		//
-		// O(RC) where R is the number of rows and C is the number of columns of the grid
-		// Hint: Remember the big-O of the underlying DynamicArray of DynamicArrays
-
-		// Note: this can be used to append columns as well as insert columns
 		checkColBound(index);
 		if(checkColLength(newCol))
 		{
@@ -123,26 +141,31 @@ public class DynamicGrid<T>{
 		}
 	}
 
+	/**
+	 * remove and return a row at index x
+	 * shift rows to remove the gap
+	 * other class handles IndexOutOfBoundsException for invalid index
+	 * O(R) where R is the number of rows 
+	 * 
+	 * @param  index Row index you want removed
+	 * @return       values of row that was removed
+	 */
 	public DynamicArray<T> removeRow(int index){
-		// remove and return a row at index x
-		// shift rows to remove the gap
-		// throw IndexOutOfBoundsException for invalid index
-		// Hint: Use the underlying storage to do 90% of this...
-		//
-		// O(R) where R is the number of rows of the grid
 		checkRowBound(index);
 		this.rows--;
 		return storage.remove(index);
 	}
 
+	/**
+	 * remove and return a col at index x
+	 * shift columns to remove the gap
+	 * other class handles IndexOutOfBoundsException for invalid index
+	 * O(RC) where R is the number of rows and C is the number of columns
+	 * 
+	 * @param  index column index to be removed
+	 * @return       old values that were removed
+	 */
 	public DynamicArray<T> removeCol(int index){
-		// remove and return a col at index x
-		// shift columns to remove the gap
-		// throw IndexOutOfBoundsException for invalid index
-		// Hint: Use the underlying storage to do 90% of this...
-		//
-		// O(RC) where R is the number of rows and C is the number of columns
-
 		checkColBound(index);
 		DynamicArray<T> tmp = new DynamicArray<>();
 		for(int i = 0; i < this.rows; i++)
@@ -153,12 +176,20 @@ public class DynamicGrid<T>{
 		return tmp;
 	}
 
+	/**
+	 * helper method to update number rows and cols
+	 */
 	private void updateRowsCols()
 	{
 		this.rows = storage.size();
 		this.cols = storage.get(0).size();
 	}
 
+	/**
+	 * helper method to check if Col can be added to grid
+	 * @param  newCol col to check
+	 * @return        true if can be added false if not
+	 */
 	private boolean checkColLength(DynamicArray<T> newCol)
 	{
 		if(storage.size() == 0)
@@ -174,6 +205,12 @@ public class DynamicGrid<T>{
 		}
 	}
 
+	/**
+	 * helper method to check if row can be added to the grid
+	 * 
+	 * @param  newRow row to check
+	 * @return        true if able false if not
+	 */
 	private boolean checkRowLength(DynamicArray<T> newRow)
 	{
 		if(storage.size() == 0)
@@ -189,12 +226,24 @@ public class DynamicGrid<T>{
 		}
 	}
 
+	/**
+	 * helper method to check if index is inside row bounds
+	 * 
+	 * @param  index index to check
+	 * @return       true if inside bounds false if outside
+	 */
 	private boolean checkRowBound(int index)
 	{
 		return (index < 0 || index > this.rows) ? false : true;
 	}
 
-	private void 	checkColBound(int index)
+	/**
+	 * helper method to check if index is inside col bounds
+	 *
+	 * @param  index index to check
+	 * @return       true if inside bounds false if outside bounds
+	 */
+	private void checkColBound(int index)
 	{
 		if(index < 0 || index > this.cols)
 		{
@@ -202,6 +251,9 @@ public class DynamicGrid<T>{
 		}
 	}
 
+	/**
+	 * helper method for debugging
+	 */
 	private void print()
 	{
 		for(int i = 0; i < storage.capacity(); i++)

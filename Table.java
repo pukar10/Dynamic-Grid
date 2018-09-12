@@ -10,57 +10,87 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 	private OpType op;						// op that defines a function f:
 											//		f(RowType,ColType)-> CellType
 	
-	//ADD MORE PRIVATE MEMBERS HERE IF NEEDED!
-	
+	/**
+	 * constructor 
+	 * create a table of empty rowHead and colHead, board of 0 rows and 0 cols
+	 * sets the operator
+	 * 
+	 * @param  op operation you want to perform on rows and cols
+	 * @return    none
+	 */
 	public Table(OpType op)
 	{
-		// constructor
-		// create an table of empty rowHead and colHead, board of 0 rows and 0 cols
-		// set the operator
 		rowHead = new DynamicArray<>();
 		colHead = new DynamicArray<>();
 		board = new DynamicGrid<>();
 		this.op = op;	
 	}
 	
+	/**
+	 * report the number of rows in board
+	 * O(1)
+	 * 
+	 * @return int number of rows in board
+	 */
 	public int getSizeRow(){
-		// report the number of rows in board
-		// O(1)
 		return rowHead.size();
 	}
 	
+	/**
+	 * report the number of columns in board
+	 * O(1)
+	 * 
+	 * @return int return number of columns in board
+	 */
 	public int getSizeCol(){
-		// report the number of columns in board 
-		// O(1)
 		return colHead.size();
 	}
-		
+	
+	/**
+	 * return the item at index r from rowHead
+	 * other class will throw IndexOutOfBoundsException for invalid index
+	 * O(1)
+	 * 
+	 * @param  r 		index of row on board
+	 * @return RowType  return item at index r from rowHead
+	 */
 	public RowType getRowHead(int r) {
-		// return the item at index r from rowHead
-		// throw IndexOutOfBoundsException for invalid index
-		// O(1)
 		return rowHead.get(r);
 	}
 	
+	/**
+	 * return the item at index c from colHead
+	 * other class will throw IndexOutOfBoundsException for invalid index
+	 * O(1)
+	 * 
+	 * @param  c 		index of col on board
+	 * @return ColType  return item at index c from colHead
+	 */
 	public ColType getColHead(int c) {
-		// return the item at index c from colHead
-		// throw IndexOutOfBoundsException for invalid index
-		// O(1)
 		return colHead.get(c);
 	}
 	
+	/**
+	 * return the cell at row r, column c from board 
+	 * other class will throw IndexOutOfBoundsException for invalid index
+	 * O(1)
+	 * 
+	 * @param  r 			row index on board
+	 * @param  c 			cell index of row
+	 * @return CellType		cell at r row and c column of board
+	 */
 	public CellType getCell(int r, int c) {
-		// return the cell at row r, column c from board
-		// throw IndexOutOfBoundsException for invalid index
-		// O(1)
 		return board.get(r,c);
 	}
 	
+	/**
+	 * change the operation
+	 * re-calculate and reset the cells of the board
+	 * O(CR) where C is the number of columns and R is the number of rows of the grid
+	 * 
+	 * @param op new operation
+	 */
 	public void setOp(OpType op) {
-		// change the operation
-		// re-calculate and reset the cells of the board
-		//
-		// O(CR) where C is the number of columns and R is the number of rows of the grid
 		this.op = op;
 		for(int i = 0; i < getSizeRow(); i++)
 		{
@@ -72,16 +102,17 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 	}
 
 
-	//IFFY CHECK OVER AGAIN!
+	/**
+	 * insert v to rowHead at index i
+	 * also insert a new row to the grid at row index i
+	 * calculate the new row based on v, existing colHad and op
+	 * i = to size means you are appending a row!!
+	 * O(C+R) where R is the number of rows and C is the number of columns 
+	 * @param  i index where you want to add row
+	 * @param  v item you want to add to row
+	 * @return true or false depending on success 
+	 */
 	public boolean addRow(int i, RowType v){
-		// insert v to rowHead at index i 
-		// also insert a new row to the grid at row index i
-		// calculate the new row based on v, existing colHead and op
-		//
-		// i may be equal to the size (indicating that you are appending a row)
-		//
-		// O(C+R) where R is the number of rows of the grid and 
-		//		C is the number of columns of the grid
 		rowHead.add(i,v);
 		DynamicArray<CellType> tmp = new DynamicArray<>();
 		for(int s = 0; s < colHead.size(); s++)
@@ -92,15 +123,17 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 		return true;
 	}
 
-
+	/**
+	 * insert v to colHead at index i
+	 * also insert a new column to the grid at column index i
+	 * calculate the new column based on v, existing rowHead and op
+	 * if i = to size then you are appending a column!!
+	 * O(CR) where R is the number of rows of the grid and C is the number of columns
+	 * @param  i index of column
+	 * @param  v item you want to add to column
+	 * @return   true or false depending on success
+	 */
 	public boolean addCol(int i, ColType v){
-		// insert v to colHead at index i 
-		// also insert a new column to the grid at column index i
-		// calculate the new column based on v, existing rowHead and op
-		// i may be equal to the size (indicating that you are appending a column)
-		//
-		// O(CR) where R is the number of rows of the grid and 
-		//		C is the number of columns of the grid
 		colHead.add(i, v);
 		DynamicArray<CellType> tmp = new DynamicArray<>();
 		for(int s = 0; s < rowHead.size(); s++)
@@ -111,37 +144,48 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 		return true;
 	}
 	
+	/**
+	 * remove and return value from rowHead at index i
+	 * remove row i from grid
+	 * other class takes care of IndexOutOfBoundsException for invalid index
+	 * O(R) where R is the number of rows of the grid
+	 * 
+	 * @param  i 			index of row you want removed
+	 * @return RowType     item from rowHead at index
+	 */
 	public RowType removeRow(int i){
-		// remove and return value from rowHead at index i
-		// also remove row i from grid
-		// throw IndexOutOfBoundsException for invalid index
-		//
-		// O(R) where R is the number of rows of the grid
-
 		RowType tmp = rowHead.remove(i);
 		board.removeRow(i);
 		return tmp;
 	}
 
-	public ColType removeCol(int i){
-		// remove and return value from colHead at index i
-		// also remove column i from grid
-		// throw IndexOutOfBoundsException for invalid index
-		//
-		// O(CR) where R is the number of rows and 
-		//		 C is the number of columns of the grid 
+	/**
+	 * remove and return value from colHead at index i
+	 * also remove column i from grid
+	 * other class throws IndexOutOfBoundsException for invalid index
+	 * O(CR) where R is the number of rows and C is the number of columns 
+	 * 
+	 * @param  i 		index of Column
+	 * @return ColType  item from colHead at index i 
+	 */
+	public ColType removeCol(int i){ 
 		ColType tmp = colHead.remove(i);
 		board.removeCol(i);
 		return tmp;
 	}
 	
+	/**
+	 * change value of rowHead at index i to be v
+	 * change the ith row of the grid using v, the ColTypes, and op
+	 * return old value of rowHead from index i
+	 * other class throws IndexOutOfBoundsException for invalid index
+	 * O(C) where C is the number of columns of the grid
+	 * 
+	 * @param  i index of row
+	 * @param  v new value
+	 * @return   return old value of rowHead from index i
+	 */
 	public RowType setRow(int i, RowType v){
-		// change value of rowHead at index i to be v
-		// also change the ith row of grid using v, the ColTypes, and op
-		// return old value of rowHead from index i
-		// throw IndexOutOfBoundsException for invalid index
-		//
-		// O(C) where C is the number of columns of the grid
 		 RowType re = rowHead.set(i, v);
 		 for(int s = 0; s < getSizeCol(); s++)
 		 {
@@ -150,13 +194,18 @@ public class Table<RowType, ColType, CellType, OpType extends Combiner<RowType,C
 		 return re;
 	}
 	
+	/**
+	 * change value of colHead at index i to be v
+	 * change the ith column of the grid using v, the RowTypes, and op
+	 * return old value of colHead from index i
+	 * other class hands IndexOutOfBoundsException for invalid index
+	 * O(R) where R is the number of rows of the grid
+	 * 
+	 * @param  i index of column
+	 * @param  v new value
+	 * @return   return old value
+	 */
 	public ColType setCol(int i, ColType v){
-		// change value of colHead at index i to be v
-		// also change the ith column of grid using v, the RowTypes, and op
-		// return old value of colHead from index i
-		// throw IndexOutOfBoundsException for invalid index
-		//
-		// O(R) where R is the number of rows of the grid
 		ColType re = colHead.set(i, v);
 		for(int s = 0; s < getSizeRow(); s++)
 		{

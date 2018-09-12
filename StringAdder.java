@@ -1,7 +1,7 @@
 /**
  * A String combiner for concatenation. 
- * <p>
- * @author CS310 GMU
+ * 
+ * Pukar Subedi
  */
 
 public class StringAdder implements Combiner<String, String, String>{
@@ -15,7 +15,6 @@ public class StringAdder implements Combiner<String, String, String>{
 	public String combine(String operand1, String operand2){
 		return operand1 + " " + operand2;
 	}
-	
 	/**
 	 *  A main method to test/demo
 	 *  @param args not used
@@ -24,6 +23,4 @@ public class StringAdder implements Combiner<String, String, String>{
 		StringAdder adder = new StringAdder();
 		System.out.println(adder.combine("george", "mason"));
 	}
-
-	
 }
