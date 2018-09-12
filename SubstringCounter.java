@@ -1,19 +1,30 @@
-// TO DO: add your implementation and JavaDoc
+//Pukar Subedi
+//CS310
 
 public class SubstringCounter implements Combiner<String, String, Integer>{
 	
-	public Integer combine(String operand1, String operand2){
-		// count how many times operand2 occurs in operand1 as a substring
-		// return the count
-		// 
-		// O(NM) where N is the length of operand1 and M is the length of operand2
-		//
-		// Hint: 
-		//	-- You might want to look through Java's String class methods for some 
-		//	 useful tools: https://docs.oracle.com/javase/8/docs/api/java/lang/String.html
-		//  -- You may for this assignment (naively) assume that these String methods are 
-		//	 all O(s) where s is the length of the string the method is called upon  
-		
+	/**
+	 * Count how many times operand2 occurs in operand1 as a substring
+	 * O(NM) where N is the length of operand1 and M is the length of Operand2
+	 * 
+	 * @param  operand1 string you are looking through
+	 * @param  operand2 String you are trying to find in operand1
+	 * @return Integer  Number of occurences of operand2 in operand1
+	 */
+	public Integer combine(String operand1, String operand2)
+	{
+		int lastIndex = 0;
+		int count = 0;
+		while(lastIndex != -1)
+		{
+			lastIndex = operand1.indexOf(operand2, lastIndex);
+			if(lastIndex != -1)
+			{
+				count++;
+				lastIndex += operand2.length()-1;
+			}
+		}
+		return count;
 	}
 	
 	// --------------------------------------------------------
@@ -28,5 +39,9 @@ public class SubstringCounter implements Combiner<String, String, Integer>{
 			System.out.println("Yay 1");
 		}
 
+		System.out.println(sc.combine("helloabchelloddefzdfjhello","hello"));
+		System.out.println(sc.combine("hihi", "hi"));
+		System.out.println(sc.combine("aa","aab") == 0);
+		System.out.println(sc.combine("23232","232"));
 	}
 }
