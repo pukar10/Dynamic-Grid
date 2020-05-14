@@ -1,6 +1,3 @@
-Pukar Subedi
-psubedi4
-G00778854
-Lecture: 005
-
-Read and understand description...
+# Dynamic Grid
+2D linked list <br />
+Used to finish a project in data structures course. Project delt with strings, substrings, and numbers. 
